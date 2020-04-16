@@ -1,0 +1,9 @@
+[ACCOUNT]
+region = eu-west-3
+access_key = SOMETHINGINCAPITALS
+secret_key = SOMETHINGSECRET
+account_id = 50M3 NUMB3R5
+
+[PROJECT]
+lambda_prefix =
+runtime = python3.8
