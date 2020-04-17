@@ -91,8 +91,8 @@ if __name__ == "__main__":
         'secret_key': config['ACCOUNT']['secret_key'],
         'account_id': config['ACCOUNT']['account_id'],
 
-        'lambda_prefix': config['PROJECT']['lambda_prefix'],
-        'runtime': config['PROJECT']['runtime']
+        'lambda_prefix': config['LAMBDA']['lambda_prefix'],
+        'runtime': config['LAMBDA']['runtime']
     }
 
     with open(lambda_config_file) as json_file:
