@@ -3,8 +3,8 @@ import configparser
 import sys
 import json
 
-from src.FunctionHandler import FunctionHandler
-from src.LayerHandler import LayerHandler
+from src.lambdas.FunctionHandler import FunctionHandler
+from src.lambdas.LayerHandler import LayerHandler
 
 
 class AwsLambdaDeployer:
@@ -79,8 +79,11 @@ if __name__ == "__main__":
         print('No argument provided')
         exit(1)
 
+    aws_config_file = 'awsdeploy.ini'
+    lambda_config_file = 'awsdeploy_lambda.json'
+
     config = configparser.ConfigParser()
-    config.read('awsdeploy.ini')
+    config.read(aws_config_file)
 
     aws_config = {
         'region': config['ACCOUNT']['region'],
@@ -92,7 +95,7 @@ if __name__ == "__main__":
         'runtime': config['PROJECT']['runtime']
     }
 
-    with open('awsdeploy_configs.json') as json_file:
+    with open(lambda_config_file) as json_file:
         data = json.load(json_file)
 
     layer_configs = data['layer_configs']

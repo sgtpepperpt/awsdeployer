@@ -1,7 +1,7 @@
 import boto3
 import time
 
-from src.IamHandler import IamHandler
+from src.lambdas.IamHandler import IamHandler
 from src.util import *
 
 
