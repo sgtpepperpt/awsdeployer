@@ -1,0 +1,13 @@
+[ACCOUNT]
+region = eu-west-3
+access_key = SOMETHINGINCAPITALS
+secret_key = SOMETHINGSECRET
+account_id = 50M3 NUMB3R5
+
+[LAMBDA]
+lambda_prefix =
+runtime = python3.8
+
+[API_GATEWAY]
+api_id = y0ur1d
+stage = yourstage

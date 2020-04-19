@@ -20,7 +20,7 @@ class FunctionHandler:
         self.memory_size = config['memory_size'] if 'memory_size' in config else 128
         self.environment = {
             'Variables': config['env']
-        }
+        } if 'env' in config else {}
 
         self.files = [config['main_file'] if 'main_file' in config else name + '.py']
         if 'additional_files' in config:

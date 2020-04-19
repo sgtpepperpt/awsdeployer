@@ -35,3 +35,13 @@ def read_file(name):
 
 def random_string(length=10):
     return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
+
+
+def build_path(parts):
+    if len(parts) == 0:
+        return '/'
+
+    string = ''
+    for part in parts:
+        string += '/' + part
+    return string

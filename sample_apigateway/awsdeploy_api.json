@@ -1,0 +1,50 @@
+{
+    "/": {
+        "GET": {
+            "function": "get",
+            "request_headers": {
+                "r": true
+            },
+            "response_headers": {
+                "Access-Control-Allow-Origin": "'*'"
+            },
+            "responses": {
+
+            }
+        }
+    },
+    "/{username}": {
+        "POST": {
+            "function": "post",
+            "request_headers": {
+                "Authorization":  true
+            },
+            "request_querystrings": {
+                "myquery": false
+            },
+            "request_body": ["body"],
+            "response_headers": {
+                "Access-Control-Allow-Origin": "'*'"
+            },
+            "responses": {
+
+            }
+        },
+        "DELETE": {
+            "function": "delete",
+            "request_headers": {
+                "Authorization":  true
+            },
+            "request_querystrings": {
+                "myquery": false
+            },
+            "request_body": ["body"],
+            "response_headers": {
+                "Access-Control-Allow-Origin": "'*'"
+            },
+            "responses": {
+
+            }
+        }
+    }
+}

@@ -12,9 +12,11 @@ class AwsLambdaDeployer:
         # create handlers for all layers, and store common layer names in an aux list
         self.layer_handlers = {}
         common_layer_names = []
-        for layer_name in layer_configs.keys():
-            self.layer_handlers[layer_name] = LayerHandler(aws_config, layer_name, layer_configs[layer_name]['requirements_file'])
-            common_layer_names.append(layer_name)
+
+        if layer_configs:
+            for layer_name in layer_configs.keys():
+                self.layer_handlers[layer_name] = LayerHandler(aws_config, layer_name, layer_configs[layer_name]['requirements_file'])
+                common_layer_names.append(layer_name)
 
         # create function handlers
         self.function_handlers = {}
@@ -98,7 +100,7 @@ if __name__ == "__main__":
     with open(lambda_config_file) as json_file:
         data = json.load(json_file)
 
-    layer_configs = data['layer_configs']
+    layer_configs = data['layer_configs'] if 'layer_configs' in data else None
     function_configs = data['function_configs']
     lambdas = AwsLambdaDeployer(aws_config, layer_configs, function_configs)
 

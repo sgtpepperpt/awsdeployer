@@ -1,0 +1,19 @@
+{
+    "function_configs": {
+        "get": {
+            "shorthand": "g",
+            "timeout": 1,
+            "additional_files": [
+                "GatewayResponses.py"
+            ]
+        },
+
+        "post": {
+            "shorthand": "p"
+        },
+
+        "delete": {
+            "shorthand": "d"
+        }
+    }
+}
