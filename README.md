@@ -39,4 +39,4 @@ The `apigateway` executable accepts two commands:
 * `$ apigateway all`: deploy the full API (destroys already existing ones)
 * `$ apigateway <method> <path>`: deploy a single method (also destroys already existing ones)
 
-The script also helps automating response codes, which you can define in `ApiResponses.py`. They are automatically deployed into API Gateway and caught by it, as long as you use the return functions in `gateway_responses.py`.
+The script also helps automating HTTP error codes, which you can find in `status_codes.md`. They are automatically deployed into API Gateway and caught by it, as long as you import the `awsdeployer` package, as seen in `sample_apigateway/get.py`.

@@ -63,7 +63,7 @@ responses = {
     "NotExtended": 510,
     "NetworkAuthenticationRequired": 511,
     "Checkpoint": 103,
-    "ThisIsfine": 218,
+    "ThisIsFine": 218,
     "PageExpired": 419,
     "MethodFailure": 420,
     "EnhanceYourCalm": 420,
