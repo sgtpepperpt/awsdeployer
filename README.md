@@ -2,7 +2,7 @@
 
 Collection of some scripts to automate AWS Lambda deployments. They are useful for quick development and deployment of AWS Lambda functions and layers, as well as a REST API Gateway integration. Just set your working directory, your __awsdeploy__ configs and you should be good to focus on actual development.
 
-Currently supporting Python.
+Currently supporting Python lambda functions.
 
 ---
 
