@@ -1,7 +1,4 @@
-import json
-
-
-# def gateway_success(body={}):
+# def success(body={}):
 #     return json.dumps({
 #         'gatewayResponse': True,
 #         'status': 'success',
@@ -10,7 +7,8 @@ import json
 #     })
 
 
-def gateway_error(error_code, user_message=''):
+def error(error_code, user_message=''):
+    import json
     return json.dumps({
         'gatewayResponse': True,
         'status': 'error',
