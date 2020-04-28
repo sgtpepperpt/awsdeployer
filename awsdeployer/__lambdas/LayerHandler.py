@@ -2,7 +2,7 @@ import boto3
 import shutil
 import subprocess
 
-from src.util import *
+from awsdeployer.__util import *
 
 
 class LayerHandler:

@@ -1,7 +1,7 @@
-from src.apigateway.ApiErrorResponses import responses
-from src.apigateway.GatewayHandler import GatewayHandler
-from src.apigateway.Templater import *
-from src.util import build_path
+from awsdeployer.__apigateway.ApiErrorResponses import responses
+from awsdeployer.__apigateway.GatewayHandler import GatewayHandler
+from awsdeployer.__apigateway.Templater import *
+from awsdeployer.__util import build_path
 
 
 class ApiWrapper:

@@ -4,8 +4,8 @@ import configparser
 import sys
 import json
 
-from src.lambdas.FunctionHandler import FunctionHandler
-from src.lambdas.LayerHandler import LayerHandler
+from awsdeployer.__lambdas.FunctionHandler import FunctionHandler
+from awsdeployer.__lambdas.LayerHandler import LayerHandler
 
 
 class AwsLambdaDeployer:

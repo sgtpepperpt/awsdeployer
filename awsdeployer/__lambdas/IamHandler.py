@@ -1,4 +1,4 @@
-from src.util import *
+from awsdeployer.__util import *
 import boto3
 
 

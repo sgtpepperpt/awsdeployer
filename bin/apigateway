@@ -4,7 +4,7 @@ import configparser
 import json
 import sys
 
-from src.apigateway.Wrapper import ApiWrapper
+from awsdeployer.__apigateway.Wrapper import ApiWrapper
 
 
 class AWSApiGatewayDeployer:

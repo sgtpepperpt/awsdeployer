@@ -1,8 +1,8 @@
 import boto3
 import time
 
-from src.lambdas.IamHandler import IamHandler
-from src.util import *
+from awsdeployer.__lambdas.IamHandler import IamHandler
+from awsdeployer.__util import *
 
 
 class FunctionHandler:
