@@ -1,4 +1,4 @@
-from src.apigateway.ApiResponses import responses
+from src.apigateway.ApiErrorResponses import responses
 from src.apigateway.GatewayHandler import GatewayHandler
 from src.apigateway.Templater import *
 from src.util import build_path
