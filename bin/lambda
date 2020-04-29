@@ -78,8 +78,8 @@ if __name__ == "__main__":
         print('No argument provided')
         exit(1)
 
-    aws_config_file = 'awsdeploy.ini'
-    lambda_config_file = 'awsdeploy_lambda.json'
+    aws_config_file = 'awsdeployer.ini'
+    lambda_config_file = 'awsdeployer_lambda.json'
 
     config = configparser.ConfigParser()
     config.read(aws_config_file)

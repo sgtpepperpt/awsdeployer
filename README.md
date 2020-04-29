@@ -13,8 +13,8 @@ Easily deploy Lambda functions and their layers.
 
 ### Usage
 These scripts assume a working directory like that of sample_lambda:
-* `awsdeploy.ini` file with your secrets (see sample file)
-* `awsdeploy_lambda.json` with your layer and function configurations
+* `awsdeployer.ini` file with your secrets (see sample file)
+* `awsdeployer_lambda.json` with your layer and function configurations
 * `function_name.py` files, one for each of your Lambda functions
 
 The executable is `lambda`, which accepts the following commands:
@@ -22,7 +22,7 @@ The executable is `lambda`, which accepts the following commands:
 * `$ lambda config [<function-name>]`: update all function configs in AWS (specify a function name to only update that function's configs); non-existing functions are created (default Lambda IAM permissions)
 * `$ lambda <function-name>`: if no option above is matched, the specified function has its code and configs updated **(probably the most common case)**; non-existing functions are created (default Lambda IAM permissions)
 
-Tip: all <function-name> parameters can be replaced by a __shorthand__, which you can specify in your `awsdeploy_configs.json`.
+Tip: all <function-name> parameters can be replaced by a __shorthand__, which you can specify in your `awsdeployer_lambda.json`.
 
 ---
 
@@ -31,8 +31,8 @@ Easily deploy API gateway, handling input parameters and error codes, so you can
 
 ### Usage
 These scripts assume a working directory like that of sample_apigateway:
-* `awsdeploy.ini` file with your secrets (see sample file)
-* `awsdeploy_api.json` with your API definition in JSON (NOT nested!)
+* `awsdeployer.ini` file with your secrets (see sample file)
+* `awsdeployer_api.json` with your API definition in JSON (NOT nested!)
 * `function_xxxx.py` files, one for each of your Lambda functions associated with the endpoints
 
 The `apigateway` executable accepts two commands:
