@@ -1,8 +1,10 @@
 # AWSDeployer
 
-Collection of some scripts to automate AWS Lambda deployments. They are useful for quick development and deployment of AWS Lambda functions and layers, as well as a REST API Gateway integration. Just set your working directory, your __awsdeploy__ configs and you should be good to focus on actual development.
+Collection of some scripts to automate AWS Lambda deployments. They are useful for quick development and deployment of AWS Lambda functions and layers, as well as a REST API Gateway integration.
 
-Currently supporting Python lambda functions.
+Just set your working directory, your __awsdeployer__ configs and you should be good to focus on actual development.
+
+Currently only supporting Python lambda functions.
 
 ---
 
@@ -17,10 +19,8 @@ These scripts assume a working directory like that of sample:
 
 The executable is `lambda`, which accepts the following commands:
 * `$ lambda layer <layer-name>`: deploy layer "layer-name" into AWS
-* `$ lambda new <function-name>`: deploy new function "function-name" into AWS (takes care of default IAM)
-* `$ lambda config [<function-name>]`: update all function configs in AWS (specify a function name to only update that function's configs)
-* `$ lambda code [<function-name>]`: ditto for function code
-* `$ lambda <function-name>`: if no option above is matched, the specified function has its code and configs updated **(probably the most common case)**
+* `$ lambda config [<function-name>]`: update all function configs in AWS (specify a function name to only update that function's configs); non-existing functions are created (default Lambda IAM permissions)
+* `$ lambda <function-name>`: if no option above is matched, the specified function has its code and configs updated **(probably the most common case)**; non-existing functions are created (default Lambda IAM permissions)
 
 Tip: all <function-name> parameters can be replaced by a __shorthand__, which you can specify in your `awsdeploy_configs.json`.
 

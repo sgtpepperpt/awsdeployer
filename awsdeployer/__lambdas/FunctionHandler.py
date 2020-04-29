@@ -57,28 +57,46 @@ class FunctionHandler:
         if response['ResponseMetadata']['HTTPStatusCode'] != 201:
             raise RuntimeError
 
-    def update_configs(self):
-        response = self.client.update_function_configuration(
-            FunctionName=self.aws_name,
-            Runtime=self.aws['runtime'],
-            Handler=self.handler,
-            Environment=self.environment,
-            Layers=self.layer_arns,
-            Timeout=self.timeout,
-            MemorySize=self.memory_size
-        )
+    def update_configs(self, retry=True):
+        try:
+            response = self.client.update_function_configuration(
+                FunctionName=self.aws_name,
+                Runtime=self.aws['runtime'],
+                Handler=self.handler,
+                Environment=self.environment,
+                Layers=self.layer_arns,
+                Timeout=self.timeout,
+                MemorySize=self.memory_size
+            )
 
-        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
-            raise RuntimeError
+            if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+                raise RuntimeError
 
-    def update_code(self):
+        except self.client.exceptions.ResourceNotFoundException:
+            if retry:
+                # create function if it not exists, then retry update configs
+                self.create()
+                self.update_configs(retry=False)
+
+    def update_code(self, retry=True):
         print('Update function code: {0}'.format(self.name))
 
-        response = self.client.update_function_code(
-            FunctionName=self.aws_name,
-            ZipFile=zip_function(self.files),
-            Publish=True
-        )
+        try:
+            response = self.client.update_function_code(
+                FunctionName=self.aws_name,
+                ZipFile=zip_function(self.files),
+                Publish=True
+            )
 
-        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
-            raise RuntimeError
+            if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+                raise RuntimeError
+
+        except self.client.exceptions.ResourceNotFoundException:
+            if retry:
+                # create function if it not exists, then retry update code
+                self.create()
+                self.update_code(retry=False)
+
+
+
+

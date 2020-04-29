@@ -30,10 +30,6 @@ class AwsLambdaDeployer:
 
             self.function_handlers[function_name] = FunctionHandler(aws_config, function_name, function_configs[function_name], layer_handlers)
 
-    def create_function(self, function_name):
-        print('Creating function {}'.format(function_name))
-        self.function_handlers[function_name].create()
-
     def update_all_function_configs(self):
         print('Updating all function configurations')
         for function_name in self.function_handlers.keys():
@@ -49,8 +45,8 @@ class AwsLambdaDeployer:
             self.function_handlers[function_name].update_configs()
             self.function_handlers[function_name].update_code()
 
-    def update_single_function_code(self, function_name):
-        print('Updating {} function code'.format(function_name))
+    def update_single_function(self, function_name):
+        print('Updating {} function'.format(function_name))
         self.function_handlers[function_name].update_configs()
         self.function_handlers[function_name].update_code()
 
@@ -123,14 +119,6 @@ if __name__ == "__main__":
 
         lambdas.update_layer(layer_name, cleanup_old=cleanup_old, update_functions=update_functions)
 
-    elif arg == 'new':
-        if len(sys.argv) < 3:
-            print('No argument provided')
-            exit(1)
-
-        function_name = expand_shortand(function_configs, sys.argv[2])
-        lambdas.create_function(function_name)
-
     elif arg == 'config':
         if len(sys.argv) < 3:
             lambdas.update_all_function_configs()
@@ -138,13 +126,6 @@ if __name__ == "__main__":
             function_name = expand_shortand(function_configs, sys.argv[2])
             lambdas.update_single_function_configs(function_name)
 
-    elif arg == 'code':
-        if len(sys.argv) < 3:
-            lambdas.update_all_functions_code()
-        else:
-            function_name = expand_shortand(function_configs, sys.argv[2])
-            lambdas.update_single_function_code(function_name)
-
     else:
-        # if not a special command then assume update_single_function_code, the most common case
-        lambdas.update_single_function_code(expand_shortand(function_configs, arg))
+        # if not a special command then assume update_single_function, the most common case
+        lambdas.update_single_function(expand_shortand(function_configs, arg))
