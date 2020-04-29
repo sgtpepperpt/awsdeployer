@@ -12,7 +12,7 @@ Currently only supporting Python lambda functions.
 Easily deploy Lambda functions and their layers.
 
 ### Usage
-These scripts assume a working directory like that of sample: 
+These scripts assume a working directory like that of sample_lambda:
 * `awsdeploy.ini` file with your secrets (see sample file)
 * `awsdeploy_lambda.json` with your layer and function configurations
 * `function_name.py` files, one for each of your Lambda functions
@@ -30,7 +30,7 @@ Tip: all <function-name> parameters can be replaced by a __shorthand__, which yo
 Easily deploy API gateway, handling input parameters and error codes, so you can focus on the code.
 
 ### Usage
-These scripts assume a working directory like that of sample: 
+These scripts assume a working directory like that of sample_apigateway:
 * `awsdeploy.ini` file with your secrets (see sample file)
 * `awsdeploy_api.json` with your API definition in JSON (NOT nested!)
 * `function_xxxx.py` files, one for each of your Lambda functions associated with the endpoints
