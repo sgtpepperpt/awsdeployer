@@ -1,10 +1,15 @@
 {
+    "layer_configs": {
+        "samplelayer": {
+            "requirements_file": "requirements.txt",
+            "common": true
+        }
+    },
     "function_configs": {
         "get": {
             "shorthand": "g",
             "timeout": 1,
             "additional_files": [
-                "GatewayResponses.py"
             ]
         },
 

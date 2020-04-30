@@ -13,10 +13,6 @@
 ```
 # Standard HTTP
 ```
-100 Continue
-101 SwitchingProtocols
-102 Processing
-103 EarlyHints
 203 Non-AuthoritativeInformation
 205 ResetContent
 206 PartialContent
@@ -56,7 +52,6 @@
 431 RequestHeaderFieldsTooLarge
 451 UnavailableForLegalReasons
 501 NotImplemented
-502 BadGateway
 503 ServiceUnavailable
 504 GatewayTimeout
 505 HTTPVersionNotSupported
@@ -70,23 +65,18 @@
 # Others
 
 ```
-103 Checkpoint
 218 ThisIsFine
 419 PageExpired
-420 MethodFailure
 420 EnhanceYourCalm
 430 ShopifyRequestHeaderFieldsTooLarge
 450 BlockedbyWindowsParentalControls
 498 InvalidToken
-499 TokenRequired
 509 BandwidthLimitExceeded
 526 InvalidSSLCertificate
 529 SiteIsoverloaded
-530 SiteIsfrozen
 598 Networkreadtimeouterror
 440 IISLoginTime-out
 449 IISRetryWith
-451 IISRedirect
 444 NginxNoResponse
 494 NginxRequestheadertoolarge
 495 NginxSSLCertificateError
@@ -99,7 +89,6 @@
 523 CloudflareOriginIsUnreachable
 524 CloudflareATimeoutOccurred
 525 CloudflareSSLHandshakeFailed
-526 CloudflareInvalidSSLCertificate
 527 CloudflareRailgunError
 530 CloudflareThousandError
 460 AWSClientClosed

@@ -1,4 +1,4 @@
-from awsdeployer.__apigateway.ApiErrorResponses import responses
+from awsdeployer.__apigateway.ApiErrorResponses import *
 from awsdeployer.__apigateway.GatewayHandler import GatewayHandler
 from awsdeployer.__apigateway.Templater import *
 from awsdeployer.__util import build_path
@@ -6,8 +6,11 @@ from awsdeployer.__util import build_path
 
 class ApiWrapper:
     """This class provides higher-level primitives for API Gateway actions"""
-    def __init__(self, aws_config):
+    def __init__(self, aws_config, full_responses, extended_responses):
         self.aws = aws_config
+        self.full_responses = full_responses
+        self.extended_responses = extended_responses
+
         self.gateway_handler = GatewayHandler(self.aws)
 
     def create_method(self, path, method, configs):
@@ -41,16 +44,27 @@ class ApiWrapper:
         self.gateway_handler.create_method_response(resource_id, method, '200', response_parameters)
         self.gateway_handler.create_integration_response(resource_id, method, '200', response_parameters, '', get_success_response_template())
 
-        for response in responses.keys():
-            regex = '^\\{{ "gatewayResponse": true, "status": "error", "type": "{0}", "userMessage": " " }}$'.format(response)
-            regex = regex.replace(' ', '(.|\\s)*')
+        for response in responses_common.keys():
+            self.__create_response(resource_id, method, response, str(responses_common[response]), response_parameters)
 
-            self.gateway_handler.create_method_response(resource_id, method, str(responses[response]), response_parameters)
-            self.gateway_handler.create_integration_response(resource_id, method, str(responses[response]), response_parameters, regex, get_error_response_template())
+        if self.full_responses:
+            for response in responses_full.keys():
+                self.__create_response(resource_id, method, response, str(responses_full[response]), response_parameters)
+
+        if self.extended_responses:
+            for response in responses_extended.keys():
+                self.__create_response(resource_id, method, response, str(responses_extended[response]), response_parameters)
 
         # catchall (Bad Gateway, should catch Lambda errors such as timeout or syntax errors)
         self.gateway_handler.create_method_response(resource_id, method, '502', response_parameters)
         self.gateway_handler.create_integration_response(resource_id, method, '502', response_parameters, '\s*.+\s*', get_error_catchall_response_template())
+
+    def __create_response(self, resource_id, method, response_code, status_code, response_parameters):
+        error_regex = '^\\{{ "gatewayResponse": true, "status": "error", "type": "{0}", "userMessage": " " }}$'
+        regex = error_regex.format(response_code).replace(' ', '(.|\\s)*')
+
+        self.gateway_handler.create_method_response(resource_id, method, status_code, response_parameters)
+        self.gateway_handler.create_integration_response(resource_id, method, status_code, response_parameters, regex, get_error_response_template())
 
     def create_resource(self, path):
         if self.get_resource_id(path):

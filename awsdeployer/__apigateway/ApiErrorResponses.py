@@ -1,4 +1,4 @@
-responses = {
+responses_common = {
     "Created": 201,
     "Accepted": 202,
     "NoContent": 204,
@@ -8,12 +8,10 @@ responses = {
     "NotFound": 404,
     "NotAcceptable": 406,
     "Conflict": 409,
-    "InternalServerError": 500,
+    "InternalServerError": 500
+}
 
-    "Continue": 100,
-    "SwitchingProtocols": 101,
-    "Processing": 102,
-    "EarlyHints": 103,
+responses_full = {
     "Non-AuthoritativeInformation": 203,
     "ResetContent": 205,
     "PartialContent": 206,
@@ -53,7 +51,6 @@ responses = {
     "RequestHeaderFieldsTooLarge": 431,
     "UnavailableForLegalReasons": 451,
     "NotImplemented": 501,
-    "BadGateway": 502,
     "ServiceUnavailable": 503,
     "GatewayTimeout": 504,
     "HTTPVersionNotSupported": 505,
@@ -61,24 +58,22 @@ responses = {
     "InsufficientStorage": 507,
     "LoopDetected": 508,
     "NotExtended": 510,
-    "NetworkAuthenticationRequired": 511,
-    "Checkpoint": 103,
+    "NetworkAuthenticationRequired": 511
+}
+
+responses_extended = {
     "ThisIsFine": 218,
     "PageExpired": 419,
-    "MethodFailure": 420,
     "EnhanceYourCalm": 420,
     "ShopifyRequestHeaderFieldsTooLarge": 430,
     "BlockedbyWindowsParentalControls": 450,
     "InvalidToken": 498,
-    "TokenRequired": 499,
     "BandwidthLimitExceeded": 509,
     "InvalidSSLCertificate": 526,
     "SiteIsoverloaded": 529,
-    "SiteIsfrozen": 530,
     "Networkreadtimeouterror": 598,
     "IISLoginTime-out": 440,
     "IISRetryWith": 449,
-    "IISRedirect": 451,
     "NginxNoResponse": 444,
     "NginxRequestheadertoolarge": 494,
     "NginxSSLCertificateError": 495,
@@ -91,7 +86,6 @@ responses = {
     "CloudflareOriginIsUnreachable": 523,
     "CloudflareATimeoutOccurred": 524,
     "CloudflareSSLHandshakeFailed": 525,
-    "CloudflareInvalidSSLCertificate": 526,
     "CloudflareRailgunError": 527,
     "CloudflareThousandError": 530,
     "AWSClientClosed": 460,
