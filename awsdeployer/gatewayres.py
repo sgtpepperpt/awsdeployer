@@ -1,10 +1,8 @@
-# def success(body={}):
-#     return json.dumps({
-#         'gatewayResponse': True,
-#         'status': 'success',
-#         'type': 'success',
-#         'body': body
-#     })
+def success(body={}):
+    import json
+    return json.dumps({
+        'body': body
+    })
 
 
 def error(error_code, user_message=''):

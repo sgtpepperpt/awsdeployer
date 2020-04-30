@@ -24,6 +24,10 @@ The executable is `lambda`, which accepts the following commands:
 
 Tip: all <function-name> parameters can be replaced by a __shorthand__, which you can specify in your `awsdeployer_lambda.json`.
 
+### Configs
+* `main_file`: specify the main function file (if not present, function_name.py is assumed)
+* `additional_files`: additional files to include with the main function file in the deployment
+
 ---
 
 ## API Gateway Deployer
