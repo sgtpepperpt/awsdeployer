@@ -33,11 +33,11 @@ class ApiWrapper:
         request_template = create_request_template(request_parameters, path_parameters=get_path_parameters(path), request_body=request_body)
 
         # create response objects based on templates
-        response_parameters = create_response_parameters(configs)
+        response_parameters = create_response_parameters(configs, 'cors' in configs and configs['cors'])
 
         # create method and integration with lambda
         self.gateway_handler.create_method(resource_id, method, request_parameters)
-        self.gateway_handler.create_integration(resource_id, method, lambda_function, request_template)
+        self.gateway_handler.create_lambda_integration(resource_id, method, lambda_function, request_template)
 
         # create responses for sucess, all programmed errors, and catchall
         # (works for any non-empty error string; empty would match 200 too)
@@ -58,6 +58,36 @@ class ApiWrapper:
         # catchall (Bad Gateway, should catch Lambda errors such as timeout or syntax errors)
         self.gateway_handler.create_method_response(resource_id, method, '502', response_parameters)
         self.gateway_handler.create_integration_response(resource_id, method, '502', response_parameters, '\s*.+\s*', get_error_catchall_response_template())
+
+        if 'cors' in configs and configs['cors']:
+            print('Adding CORS to resource')
+
+            # if OPTIONS already exists, delete it to be able to replace everything
+            if self.gateway_handler.has_method(resource_id, 'OPTIONS'):
+                self.gateway_handler.delete_method(resource_id, 'OPTIONS')
+
+            cors_response_params = {
+                'method.response.header.Access-Control-Allow-Headers': '\'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token\'',
+                'method.response.header.Access-Control-Allow-Methods': '\'HEAD,GET,POST,PUT,PATCH,DELETE,ANY,OPTIONS\'',
+                'method.response.header.Access-Control-Allow-Origin': '\'*\''
+            }
+
+            # create OPTIONS method
+            self.gateway_handler.create_method(resource_id, 'OPTIONS')
+            self.gateway_handler.create_mock_integration(resource_id, 'OPTIONS')
+            self.gateway_handler.create_method_response(resource_id, 'OPTIONS', '200', cors_response_params)
+            self.gateway_handler.create_integration_response(resource_id, 'OPTIONS', '200', cors_response_params, '', '')
+
+            # put CORS in gateway responses
+            gateway_response_params = {
+                'gatewayresponse.header.Access-Control-Allow-Headers': '\'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token\'',
+                'gatewayresponse.header.Access-Control-Allow-Methods': '\'HEAD,GET,POST,PUT,PATCH,DELETE,ANY,OPTIONS\'',
+                'gatewayresponse.header.Access-Control-Allow-Origin': '\'*\''
+            }
+            self.gateway_handler.delete_gateway_response('DEFAULT_4XX')
+            self.gateway_handler.delete_gateway_response('DEFAULT_5XX')
+            self.gateway_handler.create_gateway_response('DEFAULT_4XX', gateway_response_params)
+            self.gateway_handler.create_gateway_response('DEFAULT_5XX', gateway_response_params)
 
     def __create_response(self, resource_id, method, response_code, status_code, response_parameters):
         error_regex = '^\\{{ "gatewayResponse": true, "status": "error", "type": "{0}", "userMessage": " " }}$'

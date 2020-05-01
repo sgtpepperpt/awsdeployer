@@ -65,7 +65,7 @@ class GatewayHandler:
 
         return response
 
-    def create_integration(self, resource_id, method, function_name, template):
+    def create_lambda_integration(self, resource_id, method, function_name, template):
         unique_permission_id = 'apigateway-exec-{0}-{1}-{2}-{3}'.format(self.aws['region'], self.aws['account_id'], self.aws['api_id'], method)
 
         try:
@@ -106,6 +106,22 @@ class GatewayHandler:
 
         return response
 
+    def create_mock_integration(self, resource_id, method):
+        response = self.client.put_integration(
+            restApiId=self.aws['api_id'],
+            resourceId=resource_id,
+            httpMethod=method,
+            type='MOCK',
+            requestTemplates={
+                'application/json': '{"statusCode": 200}'
+            },
+        )
+
+        if response['ResponseMetadata']['HTTPStatusCode'] != 201:
+            raise RuntimeError
+
+        return response
+
     def create_integration_response(self, resource_id, method, status_code, parameters, regex_pattern, template):
         response = self.client.put_integration_response(
             restApiId=self.aws['api_id'],
@@ -125,7 +141,6 @@ class GatewayHandler:
         return response
 
     def create_method_response(self, resource_id, method, status_code, parameters):
-
         # only need the keys from the response parameters
         response_parameters = {}
         for parameter in parameters.keys():
@@ -147,6 +162,35 @@ class GatewayHandler:
             raise RuntimeError
 
         return response
+
+    def create_gateway_response(self, response_type, parameters):
+        response = self.client.put_gateway_response(
+            restApiId=self.aws['api_id'],
+            responseType=response_type,
+            responseParameters=parameters,
+            responseTemplates={
+                'application/json': '{"message":$context.error.messageString}'
+            }
+        )
+
+        if response['ResponseMetadata']['HTTPStatusCode'] != 201:
+            raise RuntimeError
+
+        return response
+
+    def delete_gateway_response(self, response_type):
+        try:
+            response = self.client.delete_gateway_response(
+                restApiId=self.aws['api_id'],
+                responseType=response_type
+            )
+
+            if response['ResponseMetadata']['HTTPStatusCode'] != 204:
+                raise RuntimeError
+
+            return response
+        except self.client.exceptions.NotFoundException:
+            return None
 
     def has_method(self, resource_id, method):
         try:

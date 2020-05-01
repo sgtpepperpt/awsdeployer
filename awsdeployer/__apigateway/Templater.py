@@ -1,12 +1,16 @@
 import re
 
 
-def create_response_parameters(method_config):
+def create_response_parameters(method_config, cors):
     params = {}
 
     if 'response_headers' in method_config:
         for header in method_config['response_headers'].keys():
             params['method.response.header.' + header] = method_config['response_headers'][header]
+
+    if cors:
+        # put CORS headers in method
+        params['method.response.header.Access-Control-Allow-Origin'] = '\'*\''
 
     return params
 

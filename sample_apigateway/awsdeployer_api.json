@@ -2,6 +2,7 @@
     "/": {
         "GET": {
             "function": "get",
+            "cors": false,
             "request_headers": {
                 "r": true
             },
@@ -16,6 +17,7 @@
     "/{username}": {
         "POST": {
             "function": "post",
+            "cors": true,
             "request_headers": {
                 "Authorization":  true
             },
@@ -24,7 +26,7 @@
             },
             "request_body": ["body"],
             "response_headers": {
-                "Access-Control-Allow-Origin": "'*'"
+                "MyHeaderResponse": "'3456'"
             },
             "responses": {
 
