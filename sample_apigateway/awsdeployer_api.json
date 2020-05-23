@@ -8,9 +8,6 @@
             },
             "response_headers": {
                 "Access-Control-Allow-Origin": "'*'"
-            },
-            "responses": {
-
             }
         }
     },
@@ -19,7 +16,7 @@
             "function": "post",
             "cors": true,
             "request_headers": {
-                "Authorization":  true
+                "Authorization": true
             },
             "request_querystrings": {
                 "myquery": false
@@ -27,26 +24,17 @@
             "request_body": ["body"],
             "response_headers": {
                 "MyHeaderResponse": "'3456'"
-            },
-            "responses": {
-
             }
         },
         "DELETE": {
             "function": "delete",
             "request_headers": {
-                "Authorization":  true
+                "Authorization": true
             },
             "request_querystrings": {
                 "myquery": false
             },
-            "request_body": ["body"],
-            "response_headers": {
-                "Access-Control-Allow-Origin": "'*'"
-            },
-            "responses": {
-
-            }
+            "request_body": ["body"]
         }
     }
 }

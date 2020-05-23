@@ -18,7 +18,7 @@ class ApiWrapper:
         resource_id = self.get_resource_id(path)
 
         # if method already exists, delete it to be able to replace everything
-        if self.gateway_handler.has_method(resource_id, method):
+        if resource_id and self.gateway_handler.has_method(resource_id, method):
             print('Deleting pre-existing method...')
             self.gateway_handler.delete_method(resource_id, method)
 
