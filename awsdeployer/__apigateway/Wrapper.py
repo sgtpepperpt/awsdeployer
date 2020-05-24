@@ -22,6 +22,11 @@ class ApiWrapper:
             print('Deleting pre-existing method...')
             self.gateway_handler.delete_method(resource_id, method)
 
+        # create resource if needed
+        if not resource_id:
+            self.create_resource(path)
+            resource_id = self.get_resource_id(path)
+
         print('Creating method {0} at resource {1}'.format(method, resource_id))
 
         # get necessary configs
