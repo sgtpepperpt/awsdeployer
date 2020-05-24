@@ -6,6 +6,7 @@ import json
 
 from awsdeployer.__lambdas.FunctionHandler import FunctionHandler
 from awsdeployer.__lambdas.LayerHandler import LayerHandler
+from awsdeployer.__util import has_file, create_path
 
 
 class AwsLambdaDeployer:
@@ -80,6 +81,13 @@ if __name__ == "__main__":
 
     aws_config_file = 'awsdeployer.ini'
     lambda_config_file = 'awsdeployer_lambda.json'
+
+    # try parent dir if file is not in current
+    if not has_file(aws_config_file):
+        aws_config_file = create_path('..', aws_config_file)
+
+    if not has_file(lambda_config_file):
+        lambda_config_file = create_path('..', lambda_config_file)
 
     config = configparser.ConfigParser()
     config.read(aws_config_file)

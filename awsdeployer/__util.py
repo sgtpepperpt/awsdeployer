@@ -33,6 +33,14 @@ def read_file(name):
         return file.read()
 
 
+def has_file(name):
+    return os.path.isfile(name)
+
+
+def create_path(path1, path2):
+    return os.path.join(path1, path2)
+
+
 def random_string(length=10):
     return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
 

@@ -5,6 +5,7 @@ import json
 import sys
 
 from awsdeployer.__apigateway.Wrapper import ApiWrapper
+from awsdeployer.__util import has_file, create_path
 
 
 class AWSApiGatewayDeployer:
@@ -36,6 +37,13 @@ if __name__ == "__main__":
 
     aws_config_file = 'awsdeployer.ini'
     api_config_file = 'awsdeployer_api.json'
+
+    # try parent dir if file is not in current
+    if not has_file(aws_config_file):
+        aws_config_file = create_path('..', aws_config_file)
+
+    if not has_file(api_config_file):
+        api_config_file = create_path('..', api_config_file)
 
     config = configparser.ConfigParser()
     config.read(aws_config_file)
