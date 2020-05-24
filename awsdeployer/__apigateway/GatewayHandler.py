@@ -185,7 +185,7 @@ class GatewayHandler:
                 responseType=response_type
             )
 
-            if response['ResponseMetadata']['HTTPStatusCode'] != 204:
+            if not 200 < response['ResponseMetadata']['HTTPStatusCode'] < 299:
                 raise RuntimeError
 
             return response
