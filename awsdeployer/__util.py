@@ -37,6 +37,23 @@ def has_file(name):
     return os.path.isfile(name)
 
 
+def is_directory(name):
+    return os.path.isdir(name)
+
+
+def get_files_dir(dir):
+    all_files = list()
+
+    for entry in os.listdir(dir):
+        full_path = os.path.join(dir, entry)
+        if is_directory(full_path):
+            all_files += get_files_dir(full_path)
+        else:
+            all_files.append(full_path)
+
+    return all_files
+
+
 def create_path(path1, path2):
     return os.path.join(path1, path2)
 

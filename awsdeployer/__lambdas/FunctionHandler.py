@@ -24,7 +24,12 @@ class FunctionHandler:
 
         self.files = [config['main_file'] if 'main_file' in config else name + '.py']
         if 'additional_files' in config:
-            self.files += config['additional_files']
+            # process files in file list (add files and directories, plus their contents)
+            for file in config['additional_files']:
+                if is_directory(file):
+                    self.files += get_files_dir(file)
+                else:
+                    self.files += file
 
         # get dependency layers arns
         self.layer_arns = []
