@@ -34,21 +34,18 @@ class IamHandler:
             "Statement": [
                 {{
                     "Effect": "Allow",
-                    "Action": "logs:CreateLogGroup",
-                    "Resource": "arn:aws:logs:{0}:{1}:*"
-                }},
-                {{
-                    "Effect": "Allow",
                     "Action": [
+                        "logs:CreateLogGroup",
                         "logs:CreateLogStream",
-                        "logs:PutLogEvents"
+                        "logs:PutLogEvents",
+                        "logs:DescribeLogStreams"
                     ],
                     "Resource": [
-                        "arn:aws:logs:{0}:{1}:log-group:/aws/lambda/{2}:*"
+                        "arn:aws:logs:*:*:*"
                     ]
                 }}
             ]
-        }}'''.format(self.aws['region'], self.aws['account_id'], function_name)
+        }}'''
 
         execution_role_name = 'execution-role-lambda-' + function_name + '-' + random_string(8)
         execution_policy_name = 'execution-policy-lambda-' + function_name + '-' + random_string(8)
