@@ -29,10 +29,10 @@ class IamHandler:
           ]
         }'''
 
-        execution_policy = '''{{
+        execution_policy = '''{
             "Version": "2012-10-17",
             "Statement": [
-                {{
+                {
                     "Effect": "Allow",
                     "Action": [
                         "logs:CreateLogGroup",
@@ -43,9 +43,9 @@ class IamHandler:
                     "Resource": [
                         "arn:aws:logs:*:*:*"
                     ]
-                }}
+                }
             ]
-        }}'''
+        }'''
 
         execution_role_name = 'execution-role-lambda-' + function_name + '-' + random_string(8)
         execution_policy_name = 'execution-policy-lambda-' + function_name + '-' + random_string(8)
