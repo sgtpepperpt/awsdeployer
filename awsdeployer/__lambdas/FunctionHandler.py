@@ -29,7 +29,7 @@ class FunctionHandler:
                 if is_directory(file):
                     self.files += get_files_dir(file)
                 else:
-                    self.files += file
+                    self.files += [file]
 
         # get dependency layers arns
         self.layer_arns = []

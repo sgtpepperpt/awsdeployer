@@ -42,7 +42,7 @@ def is_directory(name):
 
 
 def get_files_dir(dir):
-    all_files = list()
+    all_files = []
 
     for entry in os.listdir(dir):
         full_path = os.path.join(dir, entry)
