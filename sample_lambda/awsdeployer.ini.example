@@ -7,3 +7,6 @@ account_id = 50M3 NUMB3R5
 [LAMBDA]
 lambda_prefix =
 runtime = python3.8
+
+[AWSDEPLOYER]
+lambda_base_dir = sample_lambda

@@ -3,6 +3,7 @@
 import configparser
 import sys
 import json
+import os
 
 from awsdeployer.__lambdas.FunctionHandler import FunctionHandler
 from awsdeployer.__lambdas.LayerHandler import LayerHandler
@@ -99,7 +100,9 @@ if __name__ == "__main__":
         'account_id': config['ACCOUNT']['account_id'],
 
         'lambda_prefix': config['LAMBDA']['lambda_prefix'],
-        'runtime': config['LAMBDA']['runtime']
+        'runtime': config['LAMBDA']['runtime'],
+
+        'base_dir': config['AWSDEPLOYER']['lambda_base_dir']
     }
 
     with open(lambda_config_file) as json_file:
@@ -108,6 +111,9 @@ if __name__ == "__main__":
     layer_configs = data['layer_configs'] if 'layer_configs' in data else None
     function_configs = data['function_configs']
     lambdas = AwsLambdaDeployer(aws_config, layer_configs, function_configs)
+
+    if 'base_dir' in aws_config:
+        os.chdir(aws_config['base_dir'])
 
     # interpret terminal input
     arg = sys.argv[1]

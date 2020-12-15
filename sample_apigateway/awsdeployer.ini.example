@@ -11,3 +11,6 @@ runtime = python3.8
 [API_GATEWAY]
 api_id = y0ur1d
 stage = yourstage
+
+[AWSDEPLOYER]
+lambda_base_dir = sample_apigateway
