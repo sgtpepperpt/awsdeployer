@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="awsdeployer",
-    version="1.9",
+    version="1.9.1",
     author="Guilherme Borges",
     author_email="guilherme@guilhermeborges.net",
     description="Collection of some scripts to automate AWS Lambda deployments",

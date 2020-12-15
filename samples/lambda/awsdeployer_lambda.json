@@ -14,7 +14,7 @@
             },
             "memory_size": 256,
             "additional_files": [
-                "requirements.txt"
+                "inner"
             ]
         }
     }

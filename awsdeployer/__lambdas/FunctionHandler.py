@@ -22,6 +22,11 @@ class FunctionHandler:
             'Variables': config['env']
         } if 'env' in config else {}
 
+        # change to lambdas base directory
+        self.exec_dir = os.getcwd()
+        self.base_dir = self.aws['base_dir'] if self.aws['base_dir'] and len(self.aws['base_dir']) > 0 else self.exec_dir
+        os.chdir(self.base_dir)
+
         self.files = [config['main_file'] if 'main_file' in config else name + '.py']
         if 'additional_files' in config:
             # process files in file list (add files and directories, plus their contents)
@@ -30,6 +35,9 @@ class FunctionHandler:
                     self.files += get_files_dir(file)
                 else:
                     self.files += [file]
+
+        # change back for other functions
+        os.chdir(self.exec_dir)
 
         # get dependency layers arns
         self.layer_arns = []
@@ -40,7 +48,10 @@ class FunctionHandler:
 
     def create(self):
         role_arn = IamHandler(self.aws).create_lambda_role(self.name)
+
+        os.chdir(self.base_dir)
         code = zip_function(self.files)
+        os.chdir(self.exec_dir)
 
         time.sleep(10)  # need this for the role to propagate
 
@@ -87,9 +98,13 @@ class FunctionHandler:
         print('Update function code: {0}'.format(self.name))
 
         try:
+            os.chdir(self.base_dir)
+            code = zip_function(self.files)
+            os.chdir(self.exec_dir)
+
             response = self.client.update_function_code(
                 FunctionName=self.aws_name,
-                ZipFile=zip_function(self.files),
+                ZipFile=code,
                 Publish=True
             )
 

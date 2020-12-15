@@ -1,8 +1,12 @@
 import json
 import numpy
 
+from inner import printer
+
 
 def lambda_handler(event, context):
+    printer.myprinter()
+
     print(numpy.array([[1, 2], [3, 4]]))
 
     return {
