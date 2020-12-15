@@ -6,7 +6,7 @@ from awsdeployer.__util import *
 
 
 class LayerHandler:
-    def __init__(self, aws_config, layer_name, requirements_file):
+    def __init__(self, aws_config, layer_name, requirements_file, requirements_ignore, build_args, pre_build_command, post_build_command):
         self.aws = aws_config
         self.client = boto3.client('lambda',
                                    region_name=self.aws['region'],
@@ -14,6 +14,10 @@ class LayerHandler:
                                    aws_secret_access_key=self.aws['secret_key'])
         self.layer_name = layer_name
         self.requirements_file = requirements_file
+        self.requirements_ignore = requirements_ignore
+        self.build_args = build_args
+        self.pre_build_command = pre_build_command
+        self.post_build_command = post_build_command
 
     def __get_version_list(self):
         response = self.client.list_layer_versions(
@@ -71,15 +75,21 @@ class LayerHandler:
         package_dir_name = 'python'
 
         os.mkdir(tmp_dir)
-        os.mkdir(tmp_dir + '/' + package_dir_name)
+        os.mkdir(create_path(tmp_dir, package_dir_name))
 
-        shutil.copyfile(self.requirements_file, tmp_dir + '/requirements.txt')
+        # copy requirements file without ignores
+        with open(self.requirements_file, 'r') as f:
+            lines = f.readlines()
+        with open(create_path(tmp_dir, 'requirements.txt'), 'w') as f:
+            for line in lines:
+                if line.strip('\n') not in self.requirements_ignore:
+                    f.write(line)
 
         os.chdir(tmp_dir)
 
         # compile layer in docker
-        command = '''docker run --rm -v {0}:/foo -w /foo lambci/lambda:build-{1} \
-                        pip install -r requirements.txt --no-deps -t {2}'''.format(os.getcwd(), self.aws['runtime'], package_dir_name)
+        command = '''docker run --rm -v {0}:/foo {1} -w /foo lambci/lambda:build-{2} \
+                        /bin/bash -c "{3} pip install -r requirements.txt --no-deps -t {4} {5}"'''.format(os.getcwd(), self.build_args if self.build_args else '', self.aws['runtime'], self.pre_build_command + ' &&' if self.pre_build_command else '', package_dir_name, '&& ' + self.post_build_command if self.post_build_command else '')
 
         comp = subprocess.run([command], stdout=subprocess.PIPE, shell=True)
         if comp.returncode != 0:

@@ -3,6 +3,9 @@
         "samplelayer": {
             "requirements_file": "requirements.txt",
             "requirements_ignore": ["psycopg2"],
+            "build_args": "-v ~/psycopg2-build:/bar",
+            "pre_build_command": "echo 'Something before pip'",
+            "post_build_command": "cp -r /bar /foo/python/psycopg2",
             "common": true
         }
     },
@@ -20,3 +23,4 @@
         }
     }
 }
+

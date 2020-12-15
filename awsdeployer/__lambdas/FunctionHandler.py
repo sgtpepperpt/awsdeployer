@@ -40,11 +40,16 @@ class FunctionHandler:
         os.chdir(self.exec_dir)
 
         # get dependency layers arns
-        self.layer_arns = []
-        for layer in layer_handlers:
+        self.layers = layer_handlers
+
+    def __get_layer_arns(self):
+        # we need to run this everytime to have fresh layer versions for a config update after a layer update
+        layer_arns = []
+        for layer in self.layers:
             arn = layer.get_arn()
             if arn:
-                self.layer_arns.append(arn)
+                layer_arns.append(arn)
+        return layer_arns
 
     def create(self):
         role_arn = IamHandler(self.aws).create_lambda_role(self.name)
@@ -65,7 +70,7 @@ class FunctionHandler:
                 'ZipFile': code
             },
             Environment=self.environment,
-            Layers=self.layer_arns,
+            Layers=self.__get_layer_arns(),
             Timeout=self.timeout,
             MemorySize=self.memory_size
         )
@@ -80,7 +85,7 @@ class FunctionHandler:
                 Runtime=self.aws['runtime'],
                 Handler=self.handler,
                 Environment=self.environment,
-                Layers=self.layer_arns,
+                Layers=self.__get_layer_arns(),
                 Timeout=self.timeout,
                 MemorySize=self.memory_size
             )

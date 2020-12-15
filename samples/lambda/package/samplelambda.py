@@ -1,5 +1,6 @@
 import json
 import numpy
+# import psycopg2
 
 from inner import printer
 

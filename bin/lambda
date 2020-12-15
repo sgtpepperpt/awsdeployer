@@ -17,7 +17,7 @@ class AwsLambdaDeployer:
 
         if layer_configs:
             for layer_name in layer_configs.keys():
-                self.layer_handlers[layer_name] = LayerHandler(aws_config, layer_name, layer_configs[layer_name]['requirements_file'])
+                self.layer_handlers[layer_name] = LayerHandler(aws_config, layer_name, layer_configs[layer_name]['requirements_file'], layer_configs[layer_name]['requirements_ignore'], layer_configs[layer_name].get('build_args'), layer_configs[layer_name].get('pre_build_command'), layer_configs[layer_name].get('post_build_command'))
                 common_layer_names.append(layer_name)
 
         # create function handlers

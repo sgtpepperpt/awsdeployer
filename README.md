@@ -18,7 +18,7 @@ These scripts assume a working directory like that of sample_lambda:
 * `function_name.py` files, one for each of your Lambda functions
 
 The executable is `lambda`, which accepts the following commands:
-* `$ lambda layer <layer-name>`: deploy layer "layer-name" into AWS
+* `$ lambda layer <layer-name>`: deploy layer "layer-name" into AWS (requires docker to build)
 * `$ lambda config [<function-name>]`: update all function configs in AWS (specify a function name to only update that function's configs); non-existing functions are created (default Lambda IAM permissions)
 * `$ lambda <function-name>`: if no option above is matched, the specified function has its code and configs updated **(probably the most common case)**; non-existing functions are created (default Lambda IAM permissions)
 
@@ -27,6 +27,23 @@ Tip: all <function-name> parameters can be replaced by a __shorthand__, which yo
 ### Configs
 * `main_file`: specify the main function file (if not present, function_name.py is assumed)
 * `additional_files`: additional files to include with the main function file in the deployment
+
+### Special layer building
+If you need to build a specific package for your layer (eg. psycopg2) you can use pre and post build hooks for the layer build, and add docker arguments to the command.
+
+To build psycopg2 compile it separately, then use these configs:
+```
+"layer_configs": {
+    "psycopg2layer": {
+        "requirements_file": "requirements.txt",
+        "requirements_ignore": ["psycopg2"],
+        "build_args": "-v ~/psycopg2-build:/bar",
+        "pre_build_command": "echo 'Something before pip'",
+        "post_build_command": "cp -r /bar /foo/python/psycopg2",
+        "common": true
+    }
+}
+```
 
 ---
 
