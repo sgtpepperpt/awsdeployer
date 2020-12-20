@@ -13,10 +13,10 @@
 ```
 # Standard HTTP
 ```
-203 Non-AuthoritativeInformation
+203 NonAuthoritativeInformation
 205 ResetContent
 206 PartialContent
-207 Multi-Status
+207 MultiStatus
 208 AlreadyReported
 226 IMUsed
 300 MultipleChoices
@@ -75,7 +75,7 @@
 526 InvalidSSLCertificate
 529 SiteIsoverloaded
 598 Networkreadtimeouterror
-440 IISLoginTime-out
+440 IISLoginTimeOut
 449 IISRetryWith
 444 NginxNoResponse
 494 NginxRequestheadertoolarge

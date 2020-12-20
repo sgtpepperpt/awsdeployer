@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="awsdeployer",
-    version="1.11.0",
+    version="1.13.0",
     author="Guilherme Borges",
     author_email="guilherme@guilhermeborges.net",
-    description="Collection of some scripts to automate AWS Lambda deployments",
+    description="Collection of some scripts to automate AWS Lambda and API Gateway deployments",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/sgtpepperpt/awsdeployer",

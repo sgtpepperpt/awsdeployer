@@ -17,7 +17,7 @@ class AwsLambdaDeployer:
 
         if layer_configs:
             for layer_name in layer_configs.keys():
-                self.layer_handlers[layer_name] = LayerHandler(aws_config, layer_name, layer_configs[layer_name]['requirements_file'], layer_configs[layer_name]['requirements_ignore'], layer_configs[layer_name].get('build_args'), layer_configs[layer_name].get('pre_build_command'), layer_configs[layer_name].get('post_build_command'))
+                self.layer_handlers[layer_name] = LayerHandler(aws_config, layer_name, layer_configs[layer_name]['requirements_file'], layer_configs[layer_name].get('requirements_ignore'), layer_configs[layer_name].get('build_args'), layer_configs[layer_name].get('pre_build_command'), layer_configs[layer_name].get('post_build_command'))
                 common_layer_names.append(layer_name)
 
         # create function handlers
@@ -35,7 +35,8 @@ class AwsLambdaDeployer:
                 for pack_name in function_configs[function_name]['env_packs']:
                     env.update(env_packs[pack_name])
             # now add function-defined env, done after since vars may replace the pack's
-            env.update(function_configs[function_name]['env'])
+            if 'env' in function_configs[function_name]:
+                env.update(function_configs[function_name]['env'])
             function_configs[function_name]['env'] = env
 
             self.function_handlers[function_name] = FunctionHandler(aws_config, function_name, function_configs[function_name], layer_handlers)
@@ -117,7 +118,7 @@ if __name__ == "__main__":
 
     layer_configs = data.get('layer_configs')
     function_configs = data['function_configs']
-    env_packs = data['environment_packages']
+    env_packs = data.get('environment_packages')
     lambdas = AwsLambdaDeployer(aws_config, layer_configs, function_configs, env_packs)
 
     # interpret terminal input

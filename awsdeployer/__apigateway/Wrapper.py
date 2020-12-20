@@ -1,4 +1,4 @@
-from awsdeployer.__apigateway.ApiErrorResponses import *
+from awsdeployer import status
 from awsdeployer.__apigateway.GatewayHandler import GatewayHandler
 from awsdeployer.__apigateway.Templater import *
 from awsdeployer.__util import build_path
@@ -49,16 +49,16 @@ class ApiWrapper:
         self.gateway_handler.create_method_response(resource_id, method, '200', response_parameters)
         self.gateway_handler.create_integration_response(resource_id, method, '200', response_parameters, '', get_success_response_template())
 
-        for response in responses_common.keys():
-            self.__create_response(resource_id, method, response, str(responses_common[response]), response_parameters)
+        for response in status.Common:
+            self.__create_response(resource_id, method, response.value[1], str(response.value[0]), response_parameters)
 
         if self.full_responses:
-            for response in responses_full.keys():
-                self.__create_response(resource_id, method, response, str(responses_full[response]), response_parameters)
+            for response in status.Standard:
+                self.__create_response(resource_id, method, response.value[1], str(response.value[0]), response_parameters)
 
         if self.extended_responses:
-            for response in responses_extended.keys():
-                self.__create_response(resource_id, method, response, str(responses_extended[response]), response_parameters)
+            for response in status.Extended:
+                self.__create_response(resource_id, method, response.value[1], str(response.value[0]), response_parameters)
 
         # catchall (Bad Gateway, should catch Lambda errors such as timeout or syntax errors)
         self.gateway_handler.create_method_response(resource_id, method, '502', response_parameters)

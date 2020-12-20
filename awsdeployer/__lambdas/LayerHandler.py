@@ -82,7 +82,7 @@ class LayerHandler:
             lines = f.readlines()
         with open(create_path(tmp_dir, 'requirements.txt'), 'w') as f:
             for line in lines:
-                if line.strip('\n') not in self.requirements_ignore:
+                if not self.requirements_ignore or line.strip('\n') not in self.requirements_ignore:
                     f.write(line)
 
         os.chdir(tmp_dir)
