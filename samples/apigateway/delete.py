@@ -5,4 +5,5 @@ def lambda_handler(event, context):
     print('DELETE')
     print(event)
 
-    return json.dumps({'body': {'msg': 'Hwllo Delete'}})
+    # you can return a simple json object
+    return json.dumps({'body': {'msg': 'Hello Delete'}})

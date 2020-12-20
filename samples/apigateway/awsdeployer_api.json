@@ -30,11 +30,7 @@
             "function": "delete",
             "request_headers": {
                 "Authorization": true
-            },
-            "request_querystrings": {
-                "myquery": false
-            },
-            "request_body": ["body"]
+            }
         }
     }
 }

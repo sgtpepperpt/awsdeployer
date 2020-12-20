@@ -6,9 +6,9 @@ from awsdeployer.__util import build_path
 
 class ApiWrapper:
     """This class provides higher-level primitives for API Gateway actions"""
-    def __init__(self, aws_config, full_responses, extended_responses):
+    def __init__(self, aws_config, standard_responses, extended_responses):
         self.aws = aws_config
-        self.full_responses = full_responses
+        self.standard_responses = standard_responses
         self.extended_responses = extended_responses
 
         self.gateway_handler = GatewayHandler(self.aws)
@@ -52,7 +52,7 @@ class ApiWrapper:
         for response in status.Common:
             self.__create_response(resource_id, method, response.value[1], str(response.value[0]), response_parameters)
 
-        if self.full_responses:
+        if self.standard_responses:
             for response in status.Standard:
                 self.__create_response(resource_id, method, response.value[1], str(response.value[0]), response_parameters)
 
@@ -64,7 +64,7 @@ class ApiWrapper:
         self.gateway_handler.create_method_response(resource_id, method, '502', response_parameters)
         self.gateway_handler.create_integration_response(resource_id, method, '502', response_parameters, '\s*.+\s*', get_error_catchall_response_template())
 
-        if 'cors' in configs and configs['cors']:
+        if 'cors' in configs:
             print('Adding CORS to resource')
 
             # if OPTIONS already exists, delete it to be able to replace everything
