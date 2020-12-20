@@ -28,6 +28,9 @@ Tip: all <function-name> parameters can be replaced by a __shorthand__, which yo
 * `main_file`: specify the main function file (if not present, function_name.py is assumed)
 * `additional_files`: additional files to include with the main function file in the deployment
 
+### Environment packages
+If you need to add the same set of variables to multiple functions (eg. database configurations) you can define a global pack of environment variables that you can then reference in each function that needs it. Example in samples/lambda/awsdeployer_lambda.json
+
 ### Special layer building
 If you need to build a specific package for your layer (eg. psycopg2) you can use pre and post build hooks for the layer build, and add docker arguments to the command.
 

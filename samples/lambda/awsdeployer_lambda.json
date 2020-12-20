@@ -6,13 +6,19 @@
             "common": true
         }
     },
-
+    "environment_packages": {
+        "DB": {
+            "DB_NAME": "mydatabase",
+            "DB_HOST": "example.com"
+        }
+    },
     "function_configs": {
         "samplelambda": {
             "shorthand": "sl",
             "env": {
                 "EXAMPLE_VARIABLE": "10"
             },
+            "env_packs": ["DB"],
             "memory_size": 256,
             "additional_files": [
                 "inner"

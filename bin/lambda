@@ -10,7 +10,7 @@ from awsdeployer.__util import has_file, create_path
 
 
 class AwsLambdaDeployer:
-    def __init__(self, aws_config, layer_configs, function_configs):
+    def __init__(self, aws_config, layer_configs, function_configs, env_packs):
         # create handlers for all layers, and store common layer names in an aux list
         self.layer_handlers = {}
         common_layer_names = []
@@ -28,6 +28,15 @@ class AwsLambdaDeployer:
                 layer_names += function_configs[function_name]['additional_layers']
 
             layer_handlers = [self.layer_handlers[i] for i in layer_names]  # get actual layer handlers
+
+            # add environment packs
+            env = {}
+            if 'env_packs' in function_configs[function_name]:
+                for pack_name in function_configs[function_name]['env_packs']:
+                    env.update(env_packs[pack_name])
+            # now add function-defined env, done after since vars may replace the pack's
+            env.update(function_configs[function_name]['env'])
+            function_configs[function_name]['env'] = env
 
             self.function_handlers[function_name] = FunctionHandler(aws_config, function_name, function_configs[function_name], layer_handlers)
 
@@ -106,9 +115,10 @@ if __name__ == "__main__":
     with open(lambda_config_file) as json_file:
         data = json.load(json_file)
 
-    layer_configs = data['layer_configs'] if 'layer_configs' in data else None
+    layer_configs = data.get('layer_configs')
     function_configs = data['function_configs']
-    lambdas = AwsLambdaDeployer(aws_config, layer_configs, function_configs)
+    env_packs = data['environment_packages']
+    lambdas = AwsLambdaDeployer(aws_config, layer_configs, function_configs, env_packs)
 
     # interpret terminal input
     arg = sys.argv[1]
