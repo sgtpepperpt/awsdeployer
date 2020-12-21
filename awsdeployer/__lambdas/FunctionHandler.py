@@ -100,8 +100,6 @@ class FunctionHandler:
                 self.update_configs(retry=False)
 
     def update_code(self, retry=True):
-        print('Update function code: {0}'.format(self.name))
-
         try:
             os.chdir(self.base_dir)
             code = zip_function(self.files)

@@ -3,6 +3,7 @@
 import configparser
 import sys
 import json
+import argparse
 
 from awsdeployer.__lambdas.FunctionHandler import FunctionHandler
 from awsdeployer.__lambdas.LayerHandler import LayerHandler
@@ -10,6 +11,15 @@ from awsdeployer.__util import has_file, create_path
 
 
 class AwsLambdaDeployer:
+    @staticmethod
+    def __get_str(update_config, update_code):
+        if update_config and update_code:
+            return ' (code+config)'
+        elif update_config:
+            return ' (config)'
+        else:
+            return ' (code)'
+
     def __init__(self, aws_config, layer_configs, function_configs, env_packs):
         # create handlers for all layers, and store common layer names in an aux list
         self.layer_handlers = {}
@@ -41,34 +51,34 @@ class AwsLambdaDeployer:
 
             self.function_handlers[function_name] = FunctionHandler(aws_config, function_name, function_configs[function_name], layer_handlers)
 
-    def update_all_function_configs(self):
-        print('Updating all function configurations')
+    def update_all_functions(self, update_config=True, update_code=True):
+        print('Updating all functions{0}'.format(self.__get_str(update_config, update_code)))
         for function_name in self.function_handlers.keys():
-            self.function_handlers[function_name].update_configs()
+            self.update_single_function(function_name, update_config=update_config, update_code=update_code, print_msg=False)
 
-    def update_single_function_configs(self, function_name):
-        print('Updating {} function configurations'.format(function_name))
-        self.function_handlers[function_name].update_configs()
+    def update_single_function(self, function_name, update_config=True, update_code=True, print_msg=True):
+        if function_name not in self.function_handlers:
+            print('Function {} not found in configs'.format(function_name))
+            return
 
-    def update_all_functions_code(self):
-        print('Updating all functions code')
-        for function_name in self.function_handlers.keys():
+        print('Updating function: {0}{1}'.format(function_name, self.__get_str(update_config, update_code) if print_msg else ''))
+        if update_config:
             self.function_handlers[function_name].update_configs()
+        if update_code:
             self.function_handlers[function_name].update_code()
 
-    def update_single_function(self, function_name):
-        print('Updating {} function'.format(function_name))
-        self.function_handlers[function_name].update_configs()
-        self.function_handlers[function_name].update_code()
+    def update_layer(self, layer_name, keep_old_versions, holdback_functions):
+        if layer_name not in self.layer_handlers:
+            print('Layer {} not found in configs'.format(layer_name))
+            return
 
-    def update_layer(self, layer_name, cleanup_old=True, update_functions=True):
         print('Updating {} layer code'.format(layer_name))
         self.layer_handlers[layer_name].compile_new_version()
 
-        if update_functions:
-            self.update_all_function_configs()
+        if not holdback_functions:
+            self.update_all_functions(update_code=False)
 
-        if cleanup_old:
+        if not keep_old_versions:
             self.layer_handlers[layer_name].cleanup_old_versions()
 
 
@@ -80,27 +90,35 @@ def expand_shortand(function_configs, shortand):
         if 'shorthand' in function_configs[function_name] and function_configs[function_name]['shorthand'] == shortand:
             return function_name
 
-    print('No function with name or shortand "{0}" found'.format(shortand))
-    exit(0)
+    raise ValueError('No function with name or shortand "{0}" found'.format(shortand))
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print('No argument provided')
-        exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--config-file', default='awsdeployer.json', metavar='config_file', help="JSON deployment configuration file")
+    parser.add_argument('-i', '--account-config', default='awsdeployer.ini', metavar='account_file', help="AWS account configuration file")
 
-    aws_config_file = 'awsdeployer.ini'
-    lambda_config_file = 'awsdeployer_lambda.json'
+    subparsers = parser.add_subparsers(dest='cmd')
+    subparsers.required = True
 
-    # try parent dir if file is not in current
-    if not has_file(aws_config_file):
-        aws_config_file = create_path('..', aws_config_file)
+    layer = subparsers.add_parser('layer')
+    layer.set_defaults(command='layer')
+    layer.add_argument('layer_name', help='Name of layer to be updated')
+    layer.add_argument('-k', '--keep-old', dest='keep_old_versions', action='store_true', help='keep old layer versions')
+    layer.add_argument('-b', '--keep-func', dest='holdback_functions', action='store_true', help='keep pointer to the old layer instead of updating')
 
-    if not has_file(lambda_config_file):
-        lambda_config_file = create_path('..', lambda_config_file)
+    function = subparsers.add_parser('function')
+    function.set_defaults(command='function')
+    function.add_argument('function', nargs='?', help='name of function (or shortand) to create or update; if omitted all functions are updated')
+    function.add_argument('-c', '--config-only', action='store_true', help='update function configuration only')
+
+    args = parser.parse_args()
+
+    if args.command == 'function' and 'function_name' not in args and 'config_only' not in args:
+        parser.error('Specify either a function or config update')
 
     config = configparser.ConfigParser()
-    config.read(aws_config_file)
+    config.read(args.account_config)
 
     aws_config = {
         'region': config['ACCOUNT']['region'],
@@ -113,8 +131,11 @@ if __name__ == "__main__":
         'runtime': config['LAMBDA']['runtime']
     }
 
-    with open(lambda_config_file) as json_file:
+    with open(args.config_file) as json_file:
         data = json.load(json_file)
+
+    if 'function_configs' not in data:
+        raise ValueError('Invalid config file (no function_configs elem)')
 
     layer_configs = data.get('layer_configs')
     function_configs = data['function_configs']
@@ -122,30 +143,11 @@ if __name__ == "__main__":
     lambdas = AwsLambdaDeployer(aws_config, layer_configs, function_configs, env_packs)
 
     # interpret terminal input
-    arg = sys.argv[1]
-    if arg == 'layer':
-        if len(sys.argv) < 3:
-            print('No argument provided')
-            exit(1)
-
-        layer_name = sys.argv[2]
-        cleanup_old = True
-        update_functions = True
-        # if len(sys.argv) >= 4 and sys.argv[3] == '-k' or sys.argv[4] == '-k':
-        #     cleanup_old = False
-        #
-        # if len(sys.argv) >= 4 and sys.argv[3] == '-o' or sys.argv[4] == '-o':
-        #     update_functions = False
-
-        lambdas.update_layer(layer_name, cleanup_old=cleanup_old, update_functions=update_functions)
-
-    elif arg == 'config':
-        if len(sys.argv) < 3:
-            lambdas.update_all_function_configs()
+    if args.command == 'layer':
+        lambdas.update_layer(args.layer_name, args.keep_old_versions, args.holdback_functions)
+    elif args.command == 'function':
+        if args.function:
+            function_name = expand_shortand(function_configs, args.function)
+            lambdas.update_single_function(function_name, update_code=not args.config_only)
         else:
-            function_name = expand_shortand(function_configs, sys.argv[2])
-            lambdas.update_single_function_configs(function_name)
-
-    else:
-        # if not a special command then assume update_single_function, the most common case
-        lambdas.update_single_function(expand_shortand(function_configs, arg))
+            lambdas.update_all_functions(update_code=not args.config_only)
