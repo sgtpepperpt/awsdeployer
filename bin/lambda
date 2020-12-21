@@ -1,13 +1,11 @@
 #! /usr/local/bin/python3
 
-import configparser
-import sys
-import json
 import argparse
+import configparser
+import json
 
 from awsdeployer.__lambdas.FunctionHandler import FunctionHandler
 from awsdeployer.__lambdas.LayerHandler import LayerHandler
-from awsdeployer.__util import has_file, create_path
 
 
 class AwsLambdaDeployer:
@@ -114,9 +112,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.command == 'function' and 'function_name' not in args and 'config_only' not in args:
-        parser.error('Specify either a function or config update')
-
+    # read account configs
     config = configparser.ConfigParser()
     config.read(args.account_config)
 
